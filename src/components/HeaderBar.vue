@@ -13,13 +13,13 @@
 
           <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
-              <li class="nav-item"><router-link to="/" class="nav-link active">首页</router-link></li>
-              <li class="nav-item"><router-link to="/products" class="nav-link">产品中心</router-link></li>
-              <li class="nav-item"><a class="nav-link" href="#services">我们的服务</a></li>
-              <li class="nav-item"><a class="nav-link" href="#about">关于鸿瑞办公</a></li>
-              <li class="nav-item"><a class="nav-link" href="#partners">合作伙伴</a></li>
-              <li class="nav-item"><a class="nav-link" href="#news">新闻公告</a></li>
-              <li class="nav-item"><a class="nav-link" href="#contact">联系我们</a></li>
+              <li class="nav-item"><router-link to="/" class="nav-link header-nav-link">首页</router-link></li>
+              <li class="nav-item"><router-link to="/products" class="nav-link header-nav-link">产品中心</router-link></li>
+              <li class="nav-item"><a class="nav-link header-nav-link" href="#services">我们的服务</a></li>
+              <li class="nav-item"><router-link to="/about" class="nav-link header-nav-link">关于鸿瑞办公</router-link></li>
+              <li class="nav-item"><a class="nav-link header-nav-link" href="#partners">合作伙伴</a></li>
+              <li class="nav-item"><router-link to="/news" class="nav-link header-nav-link">新闻公告</router-link></li>
+              <li class="nav-item"><a class="nav-link header-nav-link" href="#contact">联系我们</a></li>
             </ul>
           </div>
 

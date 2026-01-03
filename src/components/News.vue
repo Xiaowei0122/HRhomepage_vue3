@@ -16,7 +16,7 @@
                 <p class="text-muted mt-2">{{ n.summary }}</p>
               </div>
               <div style="min-width:110px;">
-                <a href="#" style="color:var(--brand-red); font-weight:700;">阅读更多 →</a>
+                <router-link to="/news" style="color:var(--brand-red); font-weight:700;">阅读更多 →</router-link>
               </div>
             </div>
           </div>
@@ -25,9 +25,9 @@
         <div class="col-lg-5">
           <div class="p-3" style="background:#fff; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.04);">
             <h5 style="font-weight:800;">联系我们</h5>
-            <p class="text-muted mb-1">服务热线： <strong style="color:var(--brand-red);">029-85550780</strong></p>
-            <p class="text-muted mb-1">邮箱：service@example.com</p>
-            <p class="text-muted mb-2">地址：陕西省西安市XXX工业园</p>
+            <p class="text-muted mb-1">服务热线： <strong style="color:var(--brand-red);">029-85550780 / 85550781</strong></p>
+            <p class="text-muted mb-1">鸿瑞商城：ds.xashrbg.com</p>
+            <p class="text-muted mb-2">地址：陕西省西安市碑林区雁塔中路19号鹏博大厦A座1001</p>
 
             <div class="d-flex align-items-center gap-3 mt-3">
               <div style="width:96px; height:96px; background:#fff; border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;">

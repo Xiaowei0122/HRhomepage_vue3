@@ -11,7 +11,7 @@
           <div class="imgbox"><img :src="p.src" :alt="p.alt" /></div>
         </div>
       </div>
-      <!-- <div style="text-align:center; margin-top:18px; color:var(--muted); font-size:13px;">提示：将真实 Logo 放到 <code>assets/partners/</code> 下，并使用相同文件名即可自动替换</div> -->
+      <div style="text-align:center; margin-top:18px; color:var(--muted); font-size:13px;">免责声明：此处仅展示授权我司的合作品牌以及我司长期销售的品牌产品，禁止用作其他使用。（详见关于鸿瑞-资质荣誉页）</div>
     </div>
   </section>
 </template>

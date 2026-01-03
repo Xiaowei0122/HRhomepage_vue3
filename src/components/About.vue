@@ -11,15 +11,15 @@
           <img src="https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&w=1200&q=60" alt="关于我们图" />
           <div class="stats-overlay">
             <div class="stat">
-              <div class="num">120+</div>
-              <div class="label">服务门店</div>
+              <div class="num">省市区/央采/军采</div>
+              <div class="label">全平台入驻</div>
             </div>
             <div class="stat">
-              <div class="num">350</div>
-              <div class="label">专业工程师</div>
+              <div class="num">50+</div>
+              <div class="label">专业业务团队</div>
             </div>
             <div class="stat">
-              <div class="num">10k+</div>
+              <div class="num">500+</div>
               <div class="label">企事业客户</div>
             </div>
             <div class="stat">
