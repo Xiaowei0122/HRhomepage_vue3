@@ -34,7 +34,9 @@
                 <div class="image-wrapper">
                   <img :src="product.image" :alt="product.name" class="product-img">
                   <div class="hover-mask">
-                    <button class="btn btn-light btn-sm rounded-pill px-3">查看详情</button>
+                    <router-link :to="{ name: 'ProductDetail', params: { id: product.id }}" class="btn btn-light btn-sm rounded-pill px-3 shadow-sm">
+                        查看详情
+                    </router-link>
                   </div>
                 </div>
                 <div class="p-3 text-center">
@@ -74,7 +76,7 @@ const currentCategory = ref('all')
 
 // 模拟产品数据
 const products = ref([
-  { id: 1, catId: 'copier', categoryName: '复印机', name: '理光 IM C3500 彩机', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
+  { id: 1, catId: 'copier', categoryName: '复印机', name: '惠普 Color LaserJet M179fnw', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
   { id: 2, catId: 'printer', categoryName: '打印机', name: '惠普 LaserJet Pro M404n', image: 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?auto=format&fit=crop&w=400&q=80' },
   { id: 3, catId: 'copier', categoryName: '复印机', name: '柯尼卡美能达 C250i', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
   { id: 4, catId: 'projector', categoryName: '投影仪', name: '爱普生 CB-X06E 商务机', image: 'https://images.unsplash.com/photo-1535016120720-40c646bebbfc?auto=format&fit=crop&w=400&q=80' },
@@ -183,6 +185,15 @@ const getProductCount = (catId) => {
   justify-content: center;
   opacity: 0;
   transition: 0.3s;
+}
+
+.hover-mask .btn {
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .hover-mask .btn {
+  transform: translateY(0);
 }
 
 .product-card:hover .hover-mask {

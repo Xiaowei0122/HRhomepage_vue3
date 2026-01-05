@@ -14,6 +14,7 @@
         <div class="col-lg-4">
           <h5 class="white">联系我们</h5>
           <p class="muted mb-1">服务热线： <strong class="brand">029-85550780</strong></p>
+          <p class="muted mb-1">商务合作： <strong class="brand">134-8810-7706</strong></p>
           <p class="muted mb-1">鸿瑞商城：ds.xashrbg.com</p>
           <p class="muted mb-1">地址：陕西省西安市碑林区雁塔中路19号<br>鹏博大厦A座1001</p>
         </div>
@@ -24,11 +25,11 @@
             <ul class="footer-nav-list list-unstyled">
               <li class="nav-item"><router-link to="/" class="active">首页</router-link></li>
               <li class="nav-item"><router-link to="/products">产品中心</router-link></li>
-              <li class="nav-item"><a href="#services">我们的服务</a></li>
+              <li class="nav-item"><router-link to="/services">我们的服务</router-link></li>
               <li class="nav-item"><router-link to="/about">关于鸿瑞办公</router-link></li>
-              <li class="nav-item"><a href="#partners">合作伙伴</a></li>
+              <li class="nav-item"><router-link to="/partner-cases">合作伙伴 & 案例</router-link></li>
               <li class="nav-item"><router-link to="/news">新闻公告</router-link></li>
-              <li class="nav-item"><a href="#contact">联系我们</a></li>
+              <li class="nav-item"><router-link to="/contact">联系我们</router-link></li>
             </ul>
           </div>
         </div>
@@ -40,6 +41,6 @@
 
 <script setup>
 import { ref } from 'vue'
-const logoIcon = '/assets/logo-icon.png'
+const logoIcon = 'public/assets/partners/logo-icon.png'
 const year = new Date().getFullYear()
 </script>
