@@ -41,6 +41,6 @@
 
 <script setup>
 import { ref } from 'vue'
-const logoIcon = 'public/assets/partners/logo-icon.png'
+const logoIcon = 'assets/partners/logo-icon.png'
 const year = new Date().getFullYear()
 </script>

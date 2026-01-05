@@ -50,7 +50,7 @@
 <script setup>
 import { ref } from 'vue'
 // 修改图片路径为推荐的绝对路径形式
-const logoFull = '/assets/partners/logo-full.png'
+const logoFull = 'assets/partners/logo-full.png'
 
 // 控制弹窗显示状态
 const isModalOpen = ref(false)
