@@ -60,3 +60,9 @@ hongrui-vue3-demo/
 - 修改《售后服务》，产品详情中的《产品彩页获取》的弹窗逻辑，进行友好化处理
 - nav主导航和底端快速导航所有的router-link正常链接各个组件。
 
+## Ver0.4版本
+- 新增主页组件移动端UI适配
+- 更改新增公共Header和Footer板块的UI
+- 修改HeaderBar和FooterBar的移动端样式
+- 对应更改《Banner轮播图》《我们的服务》《合作伙伴&案例》《联系我们》板块的移动端展示UI
+- 修复一些bug
