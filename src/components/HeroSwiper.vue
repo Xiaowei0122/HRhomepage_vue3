@@ -10,13 +10,15 @@
     >
       <swiper-slide v-for="(slide, idx) in slides" :key="idx">
         <img :src="slide.image" :alt="slide.alt" />
+        <div class="hero-overlay"></div>
+        
         <div class="hero-content">
           <div class="slide-label">{{ slide.label }}</div>
           <div class="hero-title">{{ slide.title }}</div>
           <div class="hero-sub">{{ slide.sub }}</div>
           <div class="hero-actions">
-            <a class="btn btn-primary" :href="slide.cta1.href">{{ slide.cta1.text }}</a>
-            <a class="btn btn-outline" :href="slide.cta2.href">{{ slide.cta2.text }}</a>
+            <a class="btn btn-primary-custom" :href="slide.cta1.href">{{ slide.cta1.text }}</a>
+            <a class="btn btn-outline-custom" :href="slide.cta2.href">{{ slide.cta2.text }}</a>
           </div>
         </div>
       </swiper-slide>
@@ -26,21 +28,18 @@
 
 <script setup>
 import { ref } from 'vue'
-// 1. 核心组件引入
 import { Swiper, SwiperSlide } from 'swiper/vue'
-
-// 2. 模块引入路径修正：Swiper 10+ 必须从 'swiper/modules' 引入
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules'
 
-// 3. 必须引入 Swiper 的 CSS 样式，否则图片会堆叠在一起
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
 
-// 4. 定义模块
 const modules = [Autoplay, Pagination, EffectFade]
 
+// 数据保持不变
 const slides = ref([
+  // ... 您原有的 slides 数据
   {
     image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1600&q=70',
     alt: '办公设备',
@@ -90,61 +89,106 @@ const slides = ref([
 </script>
 
 <style scoped>
-.hero {
-  position: relative;
-  overflow: hidden;
-  background: #111;
-}
+.hero { position: relative; overflow: hidden; background: #111; }
 
-.banner-swiper {
-  width: 100%;
-  height: 640px; /* 显式给 Swiper 容器高度，防止塌陷 */
-}
+/* PC端高度 */
+.banner-swiper { width: 100%; height: 640px; }
+.banner-swiper .swiper-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.banner-swiper .swiper-slide {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.banner-swiper .swiper-slide img {
-  width: 100%;
-  height: 100%; /* 跟随 slide 高度 */
-  object-fit: cover;
-  display: block;
-  filter: brightness(0.96) contrast(1.03);
-}
-
+/* 文字容器基础样式 */
 .hero-content {
-  position: absolute;
-  left: 6%;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  width: 44%;
-  color: #fff;
-  padding: 0 12px;
+  position: absolute; left: 8%; top: 50%; transform: translateY(-50%);
+  z-index: 10; width: 40%; color: #fff;
 }
 
-/* 简单的按钮样式占位，防止看着奇怪，你可以根据你自己的 bootstrap 样式调整 */
-.hero-actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
+.slide-label { font-size: 14px; color: #dc3545; font-weight: 700; margin-bottom: 12px; letter-spacing: 2px; }
+.hero-title { font-size: 48px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+.hero-sub { font-size: 18px; line-height: 1.6; opacity: 0.85; margin-bottom: 30px; }
+
+/* 按钮样式优化 */
+.hero-actions { display: flex; gap: 15px; }
+.btn-primary-custom { background: #dc3545; color: #fff !important; padding: 12px 28px; border-radius: 50px; font-weight: 600; border: none; }
+.btn-outline-custom { background: transparent; color: #fff !important; border: 2px solid rgba(255,255,255,0.3); padding: 12px 28px; border-radius: 50px; font-weight: 600; }
+.btn-outline-custom:hover { background: #fff; color: #333 !important; }
+
+/* 遮罩层防止白底图看不清字 */
+.hero-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  z-index: 1;
 }
-.btn {
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  display: inline-block;
-}
-.btn-primary {
-  background-color: #0d6efd;
-  color: white;
-}
-.btn-outline {
-  border: 1px solid white;
-  color: white;
+
+/* --- 移动端核心适配 --- */
+/* --- 移动端深度优化：提升呼吸感与精致度 --- */
+@media (max-width: 991px) {
+  .banner-swiper { height: 520px; } /* 稍微增加高度，防止文案显得拥挤 */
+  
+  .hero-content {
+    left: 0; 
+    width: 100%; 
+    padding: 0 25px; /* 增加左右留白 */
+    text-align: center;
+    top: 55%; /* 内容重心稍微下移，视觉更稳 */
+  }
+  
+  /* 增强背景遮罩，确保文字在任何图片下都清晰 */
+  .hero-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+  }
+
+  /* 1. 顶部标签：缩小字号并拉开字间距，更有品牌感 */
+  .slide-label { 
+    font-size: 11px; 
+    margin-bottom: 10px; 
+    letter-spacing: 3px; 
+    opacity: 0.9;
+  }
+
+  /* 2. 标题：减小字号，避免单行文字太长导致断行突兀 */
+  .hero-title { 
+    font-size: 26px; 
+    margin-bottom: 15px; 
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* 3. 副标题：调小字号并增加行高，提升易读性 */
+  .hero-sub { 
+    font-size: 14px; 
+    margin-bottom: 30px; 
+    line-height: 1.7; 
+    opacity: 0.8;
+    padding: 0 10px; 
+  }
+  
+  /* 4. 按钮组：改回横排，减小体积，不再堵塞屏幕中心 */
+  .hero-actions { 
+    flex-direction: row !important; 
+    justify-content: center;
+    gap: 12px;
+  }
+  
+  /* 主按钮：改为适配品牌的圆角，减小高度 */
+  .btn-primary-custom {
+    width: auto !important; 
+    min-width: 120px;
+    padding: 10px 20px !important;
+    font-size: 14px;
+    border-radius: 8px !important; /* 统一使用 8px 增加稳重感 */
+    background: var(--brand-red) !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+  }
+  
+  /* 次按钮：使用半透明毛玻璃效果，增加通透感 */
+  .btn-outline-custom {
+    width: auto !important;
+    min-width: 120px;
+    padding: 10px 20px !important;
+    font-size: 14px;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    background: rgba(255,255,255,0.1); 
+    backdrop-filter: blur(4px); /* 磨砂玻璃质感 */
+  }
 }
 </style>

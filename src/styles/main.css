@@ -174,3 +174,45 @@ footer{background:#151515; color:#d3d3d3; padding:40px 0;}
   .about-media{min-height:240px;}
   .section-wrap{padding:40px 0;}
 }
+
+/* --- 移动端基础锁：防止页面左右抖动 --- */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* --- 响应式容器调整 --- */
+@media (max-width: 991px) {
+  .container-max {
+    padding: 0 15px; /* 手机端窄边距 */
+  }
+  .section-wrap {
+    padding: 40px 0; /* 缩小上下留白 */
+  }
+}
+
+/* --- 品牌合作伙伴 (Partners) 适配 --- */
+@media (max-width: 767px) {
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr) !important; /* 一行显示两个，防止Logo过小 */
+    gap: 12px !important;
+  }
+  .partner-card {
+    min-height: 90px !important;
+    padding: 10px !important;
+  }
+  .partner-card .imgbox {
+    height: 60px !important; /* 缩小Logo容器高度 */
+  }
+}
+
+/* --- 底部 (Footer) 移动端优化 --- */
+@media (max-width: 991px) {
+  footer .text-lg-end {
+    text-align: left !important; /* 手机端快速导航取消右对齐 */
+    margin-top: 20px;
+  }
+  .footer-title {
+    margin-bottom: 15px;
+  }
+}
