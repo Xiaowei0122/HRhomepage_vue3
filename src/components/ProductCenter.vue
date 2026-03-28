@@ -79,7 +79,7 @@ const products = ref([
   { id: 1, catId: 'copier', categoryName: '复印机', name: '惠普 Color LaserJet M179fnw', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
   { id: 2, catId: 'printer', categoryName: '打印机', name: '惠普 LaserJet Pro M404n', image: 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?auto=format&fit=crop&w=400&q=80' },
   { id: 3, catId: 'copier', categoryName: '复印机', name: '柯尼卡美能达 C250i', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
-  { id: 4, catId: 'projector', categoryName: '投影仪', name: '爱普生 CB-X06E 商务机', image: 'https://images.unsplash.com/photo-1535016120720-40c646bebbfc?auto=format&fit=crop&w=400&q=80' },
+  { id: 4, catId: 'projector', categoryName: '投影仪', name: '爱普生 CB-X06E 商务机', image: 'https://images.unsplash.com/photo-1616628188859-7a11abb6fcc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
   // ... 可以继续添加更多产品
 ])
 

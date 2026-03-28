@@ -90,12 +90,26 @@ header { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: st
   }
   .header-nav-link:hover::after, .header-nav-link.active::after { width: 70%; }
   .header-nav-link:hover, .header-nav-link.active { color: #dc3545 !important; }
+  /* 确保导航栏品牌区域可见 */
+  .navbar-brand {
+    display: flex !important;
+    align-items: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* 强行控制 Logo 图片尺寸 */
+  .navbar-brand img {
+    max-height: 80px !important; /* 根据你的 Logo 比例调整 */
+    width: auto !important;
+    filter: none !important; /* 移除可能的滤镜 */
+  }
 }
 
 /* 移动端调整：增加平滑渐显动画 */
 @media (max-width: 991px) {
   .container-max { padding: 0 20px !important; }
-  .logo-img { height: 36px; }
+  .logo-img { height: 50px; }
 
   /* 抽屉菜单：由 display 改为透明度控制以实现动画 */
   .navbar-collapse {

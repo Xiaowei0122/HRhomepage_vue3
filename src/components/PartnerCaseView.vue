@@ -62,7 +62,7 @@ const caseStories = [
     title: '某高校自助打印系统部署', 
     desc: '通过云打印方案解决了学生排队打印难题，实现了24小时无人值守服务。', 
     stat: '50%', 
-    img: 'https://images.unsplash.com/photo-1523050853023-8c2d27443ef8?w=400' 
+    img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400' 
   },
   { 
     tag: '政府办公', 
@@ -161,13 +161,88 @@ const caseStories = [
 }
 
 /* 6. 响应式适配 */
-@media (max-width: 768px) {
-  .brand-box {
-    height: 120px;          /* 移动端稍微收窄高度 */
+@media (max-width: 991px) {
+  /* 1. 头部 Hero 区域：缩小字号，避免折行过多 */
+  .case-hero {
+    padding: 2.5rem 0 !important;
   }
-  .case-img-side { 
-    width: 100%;            /* 移动端案例图占满宽度 */
-    height: 200px;
+  .case-hero h1 {
+    font-size: 1.8rem !important;
+    margin-top: 10px;
+  }
+  .case-hero h6 {
+    font-size: 0.8rem !important;
+    letter-spacing: 1px;
+  }
+
+  /* 2. 品牌矩阵部分：从 4 列改为 2 列，并优化间距 */
+  .ui-card.p-5 {
+    padding: 1.5rem !important; /* 缩小外部大卡片的内边距 */
+  }
+
+  .ui-card h4 {
+    font-size: 1.1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* 调整品牌格子 */
+  .brand-box {
+    height: 110px !important; /* 进一步压缩高度，保持紧凑 */
+    padding: 12px 8px !important;
+    border-radius: 12px !important;
+  }
+
+  .brand-box img {
+    max-height: 35px !important; /* 缩小 Logo 尺寸 */
+    margin-bottom: 5px;
+  }
+
+  .brand-info {
+    font-size: 10px !important; /* 缩小底部文字 */
+    transform: scale(0.9); /* 针对极细文字微调 */
+  }
+
+  /* 3. 行业案例部分：改为垂直堆叠，并优化图文比例 */
+  #cases-section {
+    padding: 2rem 0 !important;
+  }
+
+  .case-item-card {
+    flex-direction: column !important; /* 强制图文上下排列 */
+    border-radius: 16px !important;
+  }
+
+  .case-img-side {
+    width: 100% !important; /* 图片占满宽度 */
+    height: 200px !important; /* 固定高度，防止长短不一 */
+    min-height: 200px !important;
+  }
+
+  .case-content-side {
+    padding: 1.25rem !important;
+  }
+
+  .case-content-side h5 {
+    font-size: 1.1rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  .case-content-side p {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 15px !important;
+  }
+
+  /* 4. 统计信息：在移动端更醒目 */
+  .case-content-side .border-top {
+    margin-top: 10px !important;
+    padding-top: 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* 调整布局行间距 */
+  .row.g-4 {
+    --bs-gutter-y: 1rem !important;
   }
 }
 </style>

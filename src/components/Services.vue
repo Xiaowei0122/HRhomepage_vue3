@@ -133,6 +133,7 @@ const services = [
     /* 限制描述文字在手机端只显示两行，防止高度不一 */
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

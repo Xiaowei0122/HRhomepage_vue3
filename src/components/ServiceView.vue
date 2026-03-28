@@ -116,13 +116,14 @@ const serviceList = [
 </script>
 
 <style scoped>
-/* 报错修复：将 flex-column 改为正确的 flex-direction */
+/* ============================================================
+   1. 基础/PC端样式 (保持不变)
+   ============================================================ */
 .service-row {
     scroll-margin-top: 100px;
     display: flex;
 }
 
-/* Hero Section */
 .service-hero {
   height: 50vh;
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200');
@@ -137,7 +138,6 @@ const serviceList = [
   border-radius: 2px;
 }
 
-/* 服务卡片 */
 .service-badge {
   color: #dc3545;
   font-weight: 800;
@@ -163,7 +163,6 @@ const serviceList = [
   transform: scale(1.08);
 }
 
-/* 亮点样式 */
 .point-icon {
   width: 24px;
   height: 24px;
@@ -176,7 +175,6 @@ const serviceList = [
   font-size: 12px;
 }
 
-/* 按钮样式 */
 .btn-red-pill {
   background: #dc3545;
   color: #fff !important;
@@ -191,13 +189,106 @@ const serviceList = [
   box-shadow: 0 10px 20px rgba(220, 53, 69, 0.2);
 }
 
-/* 响应式：手机端取消反向排列，避免图片在下方 */
+/* ============================================================
+   2. 移动端深度适配 (max-width: 991px)
+   ============================================================ */
 @media (max-width: 991px) {
-  .flex-row-reverse {
-    flex-direction: row !important;
+  /* 调整顶层容器间距 */
+  .container.py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
   }
+
+  /* Hero 区域：在手机上高度减小，避免遮挡过多内容 */
+  .service-hero {
+    height: 35vh; 
+  }
+  .service-hero h1 {
+    font-size: 2.2rem !important; /* 缩小大标题 */
+  }
+  .service-hero p {
+    font-size: 1rem !important; /* 缩小小标题 */
+  }
+
+  /* 布局：强制取消反向排列，确保“图片在上，文字在下” */
+  .flex-row-reverse {
+    flex-direction: column !important; /* 改为垂直布局 */
+  }
+  .service-row {
+    margin-top: 1rem !important;
+    margin-bottom: 3rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* 图片卡片优化：增加圆角感，微调间距 */
+  .service-img-card {
+    border-radius: 16px !important;
+    margin-bottom: 1.5rem;
+  }
+
+  /* 文字区域适配 */
+  .col-lg-6.px-md-5 {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    text-align: center; /* 手机端内容居中更美观 */
+  }
+
+  .service-badge {
+    justify-content: center;
+    margin-bottom: 0.5rem !important;
+  }
+
   .section-title {
-    font-size: 1.75rem;
+    font-size: 1.6rem !important; /* 标题字号 */
+    margin-bottom: 1rem !important;
+  }
+
+  .text-secondary {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* 特色要点列表：改为左右对齐或紧凑排列 */
+  .row.g-3.mb-5 {
+    margin-bottom: 2rem !important;
+    text-align: left; /* 要点列表建议保持左对齐 */
+    display: inline-block; /* 配合父级居中 */
+    width: 100%;
+  }
+  
+  .col-sm-6 {
+    width: 50%; /* 手机端每行显示两个要点 */
+    float: left;
+    margin-bottom: 10px;
+  }
+
+  .point-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* 按钮适配：全宽显示，方便点击 */
+  .btn-red-pill {
+    width: 100%;
+    padding: 15px 0 !important;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-red-pill:hover {
+    transform: none; /* 手机端取消右移位移 */
+    background: #dc3545; /* 取消悬浮变色（手机端无hover） */
+  }
+}
+
+/* 针对超小屏幕 (iPhone SE等) 的微调 */
+@media (max-width: 375px) {
+  .col-sm-6 {
+    width: 100%; /* 极窄屏幕每行一个要点 */
   }
 }
 </style>
