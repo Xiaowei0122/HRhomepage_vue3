@@ -44,9 +44,9 @@
 
 <script setup>
 const stats = [
-  { num: '全平台', label: '省市区级采购入驻' },
-  { num: '50+', label: '专业业务团队' },
-  { num: '500+', label: '企事业客户' },
+  { num: '全平台', label: '省市区级、央采、军采入驻' },
+  { num: '30+', label: '专业业务团队' },
+  { num: '500+', label: '企、事业、单位客户' },
   { num: '24/7', label: '售后响应' }
 ]
 </script>

@@ -66,13 +66,23 @@
               </div>
             </div>
             
-            <div class="map-card shadow-sm rounded-4 overflow-hidden position-relative" style="height: 200px; background: #e9ecef;">
-               <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
-                <i class="bi bi-geo-fill fs-2 text-danger mb-2"></i>
-                <span class="x-small fw-bold">西安鸿瑞办公设备有限公司</span>
-                <button class="btn btn-sm btn-danger mt-2 rounded-pill px-4 shadow-sm" @click="openNavigation">开始导航</button>
-              </div>
-            </div>
+            <div class="map-card shadow-sm rounded-4 overflow-hidden position-relative" style="height: 250px; background: #e9ecef;">
+      <!-- 1. 真实的地图容器 -->
+      <div id="amap-container" class="h-100 w-100"></div>
+
+      <!-- 2. 悬浮在地图上的 UI 遮罩 (可选：如果你想让地图露出来，可以去掉 bg-white 或调高透明度) -->
+      <div class="map-overlay-content position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(transparent, rgba(0,0,0,0.6));">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="text-white">
+            <div class="x-small fw-bold">西安鸿瑞办公设备有限公司</div>
+            <div style="font-size: 10px; opacity: 0.8;">碑林区鹏博大厦A座1001</div>
+          </div>
+          <button class="btn btn-sm btn-danger rounded-pill px-3 shadow-sm" @click="openNavigation">
+            <i class="bi bi-geo-alt-fill me-1"></i>开始导航
+          </button>
+        </div>
+      </div>
+</div>
           </div>
 
           <div class="col-lg-7">
@@ -144,9 +154,56 @@ const handleSubmit = () => {
   }, 1200)
 }
 
-const openNavigation = () => {
-  window.open('https://uri.amap.com/marker?position=108.966,34.233&name=西安市鸿瑞办公设备有限公司', '_blank')
+import { onMounted, onUnmounted } from 'vue'
+
+let map = null
+
+onMounted(() => {
+  // 【重要】设置安全密钥，否则 2.0 版本地图无法加载
+  window._AMapSecurityConfig = {
+    securityJsCode: '6427cae015cfd4935925e09d3cf43bb2', 
+  }
+
+  // 动态加载脚本
+  const script = document.createElement('script')
+  script.src = 'https://webapi.amap.com/maps?v=2.0&key=01b2f755499035d7fc9fcf0da9fc680f'
+  script.async = true
+  script.onload = () => {
+    initAMap()
+  }
+  document.head.appendChild(script)
+})
+
+const initAMap = () => {
+  if (!window.AMap) return
+  
+  map = new window.AMap.Map('amap-container', {
+    viewMode: '2D',
+    zoom: 16,
+    center: [108.964398, 34.232499], // 鹏博大厦经纬度
+    mapStyle: 'amap://styles/normal', // 可选：macaron, dark 等风格
+  })
+
+  // 添加公司位置标记
+  const marker = new window.AMap.Marker({
+    position: [108.964398, 34.232499],
+    title: '西安市鸿瑞办公设备有限公司'
+  })
+  map.add(marker)
 }
+
+// 导航跳转逻辑 (保持你之前的即可)
+const openNavigation = () => {
+  window.open('https://uri.amap.com/marker?position=108.964398,34.232499&name=西安市鸿瑞办公设备有限公司', '_blank')
+}
+
+// 组件销毁时释放地图资源
+onUnmounted(() => {
+  if (map) {
+    map.destroy()
+    map = null
+  }
+})
 </script>
 
 <<style scoped>

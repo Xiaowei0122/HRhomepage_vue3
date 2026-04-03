@@ -7,7 +7,7 @@
           <div class="logo-small mb-3">
             <img src="/assets/partners/logo-icon.png" alt="logo" />
           </div>
-          <p class="muted">鸿瑞办公 — 专注办公设备与运维服务，提供设备采购、售后、耗材配送、供应链与智能办公整体解决方案。</p>
+          <p class="muted">西安鸿瑞办公 — 专注办公设备与运维服务，提供设备采购、售后维保、耗材配送、供应链管理及智能办公整体解决方案。经营办公耗材、办公设备、办公文具、劳保日杂等全品类产品，一站式满足企业办公需求。</p>
         </div>
 
         <div class="col-lg-4 col-md-6">
@@ -40,7 +40,11 @@
           </div>
           <div class="beian-links">
             <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备XXXXXXXX号-1</a>
-            </div>
+            <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61010302xxxxxx" target="_blank">
+              <img src="/public/assets/partners/batb.png" alt="beian" style="height: 18px; vertical-align: middle; margin-right: 6px;" />  
+              陕公网安备61010302xxxxxx号 
+            </a>
+          </div>
         </div>
       </div>
     </div>

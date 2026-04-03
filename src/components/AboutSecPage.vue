@@ -70,9 +70,9 @@ const subNav = [
 ]
 
 const culture = [
-  { title: '企业愿景', desc: '成为行业领先的数字化办公集成商', icon: 'bi bi-eye-fill' },
-  { title: '企业使命', desc: '助力企业办公效率全面升级', icon: 'bi bi-lightning-charge-fill' },
-  { title: '核心价值观', desc: '诚信、专业、高效、共赢', icon: 'bi bi-heart-fill' }
+  { title: '企业愿景', desc: '构建员工实现自我价值的平台，全体员工的收入处于行业领先水平', icon: 'bi bi-eye-fill' },
+  { title: '企业使命', desc: '以客户为中心、以奋斗者为本、长期艰苦奋斗', icon: 'bi bi-lightning-charge-fill' },
+  { title: '核心价值观', desc: '诚信、前瞻、凝聚、务实、温暖、共赢', icon: 'bi bi-heart-fill' }
 ]
 
 const depts = [
