@@ -10,7 +10,7 @@
       <div class="row g-4">
         <div class="col-md-4" v-for="item in culture" :key="item.title">
           <div class="culture-card p-4 text-center h-100">
-            <div class="icon-circle mb-3 mx-auto text-danger"><i :class="item.icon"></i></div>
+            <div class="icon-circle mb-3 mx-auto text-danger"><span v-if="isEmoji(item.icon)">{{ item.icon }}</span><i v-else :class="item.icon"></i></div>
             <h4 class="fw-bold">{{ item.title }}</h4>
             <p class="text-muted mb-0">{{ item.desc }}</p>
           </div>
@@ -35,12 +35,13 @@
     <section id="honor" class="container py-5">
       <h3 class="section-title text-center mb-5">资质荣誉 & 授权书</h3>
       <div class="row row-cols-2 row-cols-md-4 g-4">
-        <div class="col" v-for="cert in 4" :key="cert">
+        <div class="col" v-for="cert in honors" :key="cert.id || cert.title">
           <div class="cert-item p-2 border rounded-4 text-center">
              <div class="aspect-ratio-box bg-light rounded-3 mb-2 d-flex align-items-center justify-content-center">
-                <span class="text-muted small">授权证书 {{ cert }}</span>
+                <img v-if="cert.url" :src="cert.url" class="w-100 h-100 object-fit-cover" alt="荣誉" />
+                <span v-else class="text-muted small">{{ cert.title }}</span>
              </div>
-             <p class="small mb-0 fw-bold">代理证书 / 资质</p>
+             <p class="small mb-0 fw-bold">{{ cert.type || '资质荣誉' }}</p>
           </div>
         </div>
       </div>
@@ -50,9 +51,9 @@
       <div class="container">
         <h3 class="text-center mb-5">办公环境 / 公司相册</h3>
         <div class="row g-2">
-          <div class="col-md-4" v-for="img in 6" :key="img">
+          <div class="col-md-4" v-for="(img, idx) in album" :key="idx">
             <div class="album-img-wrapper rounded-3 overflow-hidden">
-               <img :src="`https://picsum.photos/600/400?random=${img}`" class="w-100 h-100 object-fit-cover" alt="Environment">
+               <img :src="img" class="w-100 h-100 object-fit-cover" alt="Environment">
             </div>
           </div>
         </div>
@@ -62,6 +63,9 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { getPublicConfig, getHonors } from '../api/public'
+
 const subNav = [
   { id: 'culture', name: '企业文化' },
   { id: 'structure', name: '组织架构' },
@@ -69,20 +73,51 @@ const subNav = [
   { id: 'gallery', name: '公司相册' }
 ]
 
-const culture = [
+const culture = ref([
   { title: '企业愿景', desc: '构建员工实现自我价值的平台，全体员工的收入处于行业领先水平', icon: 'bi bi-eye-fill' },
   { title: '企业使命', desc: '以客户为中心、以奋斗者为本、长期艰苦奋斗', icon: 'bi bi-lightning-charge-fill' },
   { title: '核心价值观', desc: '诚信、前瞻、凝聚、务实、温暖、共赢', icon: 'bi bi-heart-fill' }
-]
+])
 
-const depts = [
+const depts = ref([
   { name: '直销大客户部', duty: '负责省市区级机关事业单位招标与项目交付。' },
   { name: '技术运维部', duty: '专业工程师，负责驻场运维与售后保障。' },
   { name: '分销与渠道拓展部', duty: '负责公司产品的渠道建设、战略合作伙伴关系的拓展与管理。' },
   { name: '仓储物流部', duty: '一站式耗材配送与设备库存实时管理。' },
   { name:'后勤保障部',duty:'日常运营中的商务支持、采购管理、物资保障及后勤服务'},
   { name:'财务与内控管理部',duty:'负责公司资金管理、预算编制、成本核算、税务筹划及财务风险管控，为业务运营提供专业财务支撑与决策依据。'},
-]
+])
+
+const honors = ref([])
+const album = ref(Array.from({ length: 6 }, (_, i) => `https://picsum.photos/600/400?random=${i}`))
+
+// 后端 culture 图标为 emoji，本地默认图标为 bootstrap icon class
+const isEmoji = (s) => !!s && !s.startsWith('bi ')
+
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    const about = cfg.about || {}
+    if (about.culture && about.culture.length) {
+      culture.value = about.culture.map((c) => ({ title: c.title, desc: c.desc, icon: c.icon || '' }))
+    }
+    if (about.depts && about.depts.length) {
+      depts.value = about.depts.map((d) => ({ name: d.name, duty: d.duty }))
+    }
+    if (about.album && about.album.length) {
+      album.value = about.album
+    }
+  } catch { /* 后端不可用时保留默认内容 */ }
+
+  try {
+    const list = (await getHonors() || [])
+    honors.value = list.length
+      ? list
+      : Array.from({ length: 4 }, (_, i) => ({ id: i + 1, title: '授权证书 ' + (i + 1), type: '代理证书 / 资质', url: '' }))
+  } catch {
+    honors.value = Array.from({ length: 4 }, (_, i) => ({ id: i + 1, title: '授权证书 ' + (i + 1), type: '代理证书 / 资质', url: '' }))
+  }
+})
 </script>
 
 <style scoped>

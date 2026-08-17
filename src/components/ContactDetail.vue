@@ -37,19 +37,19 @@
             <div class="info-card shadow-sm p-4 rounded-4 bg-white mb-4">
               <h5 class="section-title mb-4">业务咨询</h5>
               
-              <a href="tel:02985550780" class="d-flex align-items-center mb-4 text-decoration-none text-dark contact-link">
+              <a :href="'tel:' + servicePhone" class="d-flex align-items-center mb-4 text-decoration-none text-dark contact-link">
                 <div class="icon-box me-3"><i class="bi bi-headset"></i></div>
                 <div>
                   <div class="text-muted x-small">服务热线 (点击拨打)</div>
-                  <div class="fw-bold text-danger">029-85550780</div>
+                  <div class="fw-bold text-danger">{{ servicePhone }}</div>
                 </div>
               </a>
 
-              <a href="tel:13488107706" class="d-flex align-items-center mb-4 text-decoration-none text-dark contact-link">
+              <a :href="'tel:' + businessPhone" class="d-flex align-items-center mb-4 text-decoration-none text-dark contact-link">
                 <div class="icon-box me-3"><i class="bi bi-phone"></i></div>
                 <div>
                   <div class="text-muted x-small">业务合作</div>
-                  <div class="fw-bold text-danger">134-8810-7706</div>
+                  <div class="fw-bold text-danger">{{ businessPhone }}</div>
                 </div>
               </a>
 
@@ -57,12 +57,12 @@
                 <div class="icon-box me-3"><i class="bi bi-geo-alt"></i></div>
                 <div>
                   <div class="text-muted x-small">公司地址</div>
-                  <div class="fw-bold small">西安市碑林区雁塔中路19号鹏博大厦A座1001</div>
+                  <div class="fw-bold small">{{ address }}</div>
                 </div>
               </div>
 
               <div class="p-3 bg-light rounded-3">
-                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-2"></i>周一至周五 08:30 - 18:00</p>
+                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-2"></i>{{ workingHours }}</p>
               </div>
             </div>
             
@@ -129,11 +129,29 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { getPublicConfig, submitLead } from '../api/public'
 
 const isSubmitting = ref(false)
 const showStatus = ref(false)
 const formData = reactive({ name: '', phone: '', type: '', message: '' })
+
+// 联系方式（后端可配置，缺省用默认值）
+const servicePhone = ref('029-85550780')
+const businessPhone = ref('134-8810-7706')
+const address = ref('西安市碑林区雁塔中路19号鹏博大厦A座1001')
+const workingHours = ref('周一至周五 08:30 - 18:00')
+
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    const c = cfg.contact || {}
+    if (c.phone) servicePhone.value = c.phone
+    if (c.businessPhone) businessPhone.value = c.businessPhone
+    if (c.address) address.value = c.address
+    if (c.workingHours) workingHours.value = c.workingHours
+  } catch { /* 后端不可用时保留默认联系方式 */ }
+})
 
 // 服务流程配置数据
 const flowSteps = [
@@ -143,18 +161,26 @@ const flowSteps = [
   { icon: 'bi-shield-check', title: '售后保障', desc: '定期维护与耗材配送' }
 ]
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+  if (!formData.name.trim() || !formData.phone.trim()) return
   isSubmitting.value = true
-  setTimeout(() => {
-    isSubmitting.value = false
+  try {
+    await submitLead({
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      category: formData.type,
+      content: formData.message,
+    })
     showStatus.value = true
     setTimeout(() => { showStatus.value = false }, 3500)
     // 清空表单
     Object.assign(formData, { name: '', phone: '', type: '', message: '' })
-  }, 1200)
+  } catch (e) {
+    alert(e.message || '提交失败，请稍后重试')
+  } finally {
+    isSubmitting.value = false
+  }
 }
-
-import { onMounted, onUnmounted } from 'vue'
 
 let map = null
 

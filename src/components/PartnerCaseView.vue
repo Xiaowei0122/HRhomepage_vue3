@@ -33,7 +33,7 @@
               <h5 class="fw-bold mb-3">{{ item.title }}</h5>
               <p class="text-muted small">{{ item.desc }}</p>
               <div class="mt-3 pt-3 border-top text-danger fw-bold small">
-                效率提升: {{ item.stat }}
+                合作模式: {{ item.stat }}
               </div>
             </div>
           </div>
@@ -44,8 +44,10 @@
 </template>
 
 <script setup>
-// 修正报错：定义模板所需的变量
-const brands = [
+import { ref, onMounted } from 'vue'
+import { getBrands, getCases } from '../api/public'
+
+const brands = ref([
   { name: 'deli', logo: 'assets/partners/deli.svg', role: '核心合作伙伴' },
   { name: 'Pantum', logo: 'assets/partners/pentum.png', role: '核心合作伙伴' },
   { name: 'Zhonguan', logo: 'assets/partners/zg_placeholder.png', role: '品牌耗材商' },
@@ -54,9 +56,9 @@ const brands = [
   { name: 'Canon', logo: 'assets/partners/canon.png', role: '专业售后中心' },
   { name: 'Epson', logo: 'assets/partners/epson.png', role: '特约服务商' },
   { name: 'Huawei', logo: 'assets/partners/huawei.png', role: '生态合作伙伴' }
-]
+])
 
-const caseStories = [
+const caseStories = ref([
   { 
     tag: '教育行业', 
     title: '某高校自助打印系统部署', 
@@ -71,7 +73,29 @@ const caseStories = [
     stat: '35%', 
     img: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400' 
   }
-]
+])
+
+onMounted(async () => {
+  try {
+    const list = (await getBrands() || []).filter((x) => x && x.logo)
+    if (list.length) {
+      brands.value = list.map((x) => ({ name: x.name || '', logo: x.logo, role: x.level || '合作伙伴' }))
+    }
+  } catch { /* 后端不可用时保留默认品牌 */ }
+
+  try {
+    const cases = (await getCases() || []).filter((x) => x && (x.client || x.summary))
+    if (cases.length) {
+      caseStories.value = cases.map((x) => ({
+        tag: x.industry || '行业案例',
+        title: x.client || '',
+        desc: x.summary || '',
+        stat: x.mode || x.device || '',
+        img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400',
+      }))
+    }
+  } catch { /* 后端不可用时保留默认案例 */ }
+})
 </script>
 
 <style scoped>

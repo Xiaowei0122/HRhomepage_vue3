@@ -29,8 +29,11 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { getBrands } from '../api/public'
+
 // 确保路径以 / 开头，对应 public 目录
-const partners = [
+const fallbackPartners = [
   { src: '/assets/partners/deli.svg', alt: '得力' },
   { src: '/assets/partners/pentum.png', alt: '奔图' },
   { src: '/assets/partners/lenovo.png', alt: '联想' },
@@ -40,6 +43,17 @@ const partners = [
   { src: '/assets/partners/zg_placeholder.png', alt: '众冠硒鼓' },
   { src: '/assets/partners/huawei.png', alt: '华为' },
 ]
+
+const partners = ref(fallbackPartners)
+
+onMounted(async () => {
+  try {
+    const brands = (await getBrands() || []).filter((b) => b && b.logo)
+    if (brands.length) {
+      partners.value = brands.map((b) => ({ src: b.logo, alt: b.name || '' }))
+    }
+  } catch { /* 后端不可用时保留默认品牌 */ }
+})
 </script>
 
 <style scoped>

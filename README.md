@@ -89,3 +89,23 @@ hongrui-vue3-demo/
 - 修改demo内容为一些实际的公司内容
 - 新增网安备案与IPC备案demo，方便后期审核成功后，直接修改。
 - 添加网页Favicon‌的link标签，添加logo对应的ico图标
+
+## Ver0.6版本
+- 前后端联动（官网接入 CMS 后端公开接口，数据真实化）
+  - 新增 `src/api/` 请求层：
+    - `request.js`：基于 fetch（无 axios 依赖）的统一封装，自动解包后端 `{ code, data, message }` 响应，非 200 抛出带 message 的错误。
+    - `public.js`：公开接口模块，对应后端 `/api/public/*`，含 `getPublicConfig`（带缓存）、`getBanners`、`getNews`、`getNewsDetail`、`getProducts`、`getProductDetail`、`getBrands`、`getCases`、`getHonors`、`submitLead`。
+  - 组件数据接入后端，替换原有 mock 数据：
+    - 轮播图 (HeroSwiper) → 读取站点配置中的 banners。
+    - 导航/关于/服务/联系 (HeaderBar、FooterBar、About、Services、ServiceView、ContactAnchor) → 读取 `getPublicConfig` 站点配置。
+    - 新闻列表/详情 (News、NewsPage、NewsDetail) → `getNews` / `getNewsDetail`，分类 Tab 由数据动态生成。
+    - 产品列表/详情 (ProductCenter、ProductDetail) → `getProducts` / `getProductDetail`。
+    - 品牌/案例 (Partners、PartnerCaseView) → `getBrands` / `getCases`。
+    - 关于与荣誉 (AboutSecPage) → `getPublicConfig` / `getHonors`。
+    - 联系我们 (ContactDetail) → `getPublicConfig` + `submitLead` 表单提交，落库为后台需求线索。
+- 降级回退：所有组件在 API 请求失败（后端不可用）时自动保留原有 mock 数据，官网可独立运行展示。
+- 工程化配置：
+  - `vite.config.mjs` 新增 `/api` 代理到 `http://localhost:8080`，开发环境同源请求无跨域。
+  - 端口调整为 `5175`（5173/5174 已被 CMS / 小程序占用）。
+  - 新增 `.env.development` / `.env.production` 环境变量。
+  - 新增 `start_dev.cmd` 一键启动脚本：检查依赖 → 检测后端连通性 → 启动前端 → 打开浏览器。

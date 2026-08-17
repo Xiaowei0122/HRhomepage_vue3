@@ -27,15 +27,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules'
+import { getPublicConfig } from '../api/public'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
 
 const modules = [Autoplay, Pagination, EffectFade]
+
+// 后端轮播结构：{ _id, title, link, url }；为空时回退到下方默认数据
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    const banners = (cfg.banners || []).filter((b) => b && b.url)
+    if (banners.length) {
+      slides.value = banners.map((b, i) => ({
+        image: b.url,
+        alt: b.title || `轮播图${i + 1}`,
+        label: '鸿瑞办公',
+        title: b.title || '',
+        sub: '',
+        cta1: { text: '了解更多', href: b.link || '#services' },
+        cta2: { text: '咨询采购', href: '#contact' },
+      }))
+    }
+  } catch { /* 后端不可用时保留默认轮播 */ }
+})
 
 // 数据保持不变
 const slides = ref([

@@ -13,10 +13,10 @@
         <div class="col-lg-4 col-md-6">
           <h5 class="white">联系我们</h5>
           <div class="contact-info">
-            <p class="muted mb-1">服务热线： <strong class="brand">029-85550780</strong></p>
-            <p class="muted mb-1">商务合作： <strong class="brand">134-8810-7706</strong></p>
+            <p class="muted mb-1">服务热线： <strong class="brand">{{ servicePhone }}</strong></p>
+            <p class="muted mb-1">商务合作： <strong class="brand">{{ businessPhone }}</strong></p>
             <p class="muted mb-1">鸿瑞商城：ds.xashrbg.com</p>
-            <p class="muted mb-1">地址：陕西省西安市碑林区雁塔中路19号<br>鹏博大厦A座1001</p>
+            <p class="muted mb-1">地址：{{ address }}</p>
           </div>
         </div>
 
@@ -39,10 +39,10 @@
             © {{ year }} 西安鸿瑞办公设备有限公司 . 保留所有权利
           </div>
           <div class="beian-links">
-            <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备XXXXXXXX号-1</a>
-            <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61010302xxxxxx" target="_blank">
-              <img src="/public/assets/partners/batb.png" alt="beian" style="height: 18px; vertical-align: middle; margin-right: 6px;" />  
-              陕公网安备61010302xxxxxx号 
+            <a v-if="icp" href="https://beian.miit.gov.cn/" target="_blank">{{ icp }}</a>
+            <a v-if="gongan" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61010302xxxxxx" target="_blank">
+              <img src="/public/assets/partners/batb.png" alt="beian" style="height: 18px; vertical-align: middle; margin-right: 6px;" />
+              {{ gongan }}
             </a>
           </div>
         </div>
@@ -52,7 +52,27 @@
 </template>
 
 <script setup>
-  const year = new Date().getFullYear()
+import { ref, onMounted } from 'vue'
+import { getPublicConfig } from '../api/public'
+
+const year = new Date().getFullYear()
+const servicePhone = ref('029-85550780')
+const businessPhone = ref('134-8810-7706')
+const address = ref('陕西省西安市碑林区雁塔中路19号鹏博大厦A座1001')
+const icp = ref('陕ICP备XXXXXXXX号-1')
+const gongan = ref('陕公网安备61010302xxxxxx号')
+
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    const c = cfg.contact || {}
+    if (c.phone) servicePhone.value = c.phone
+    if (c.businessPhone) businessPhone.value = c.businessPhone
+    if (c.address) address.value = c.address
+    if (cfg.icp) icp.value = cfg.icp
+    if (cfg.gongan) gongan.value = cfg.gongan
+  } catch { /* 后端不可用时保留默认值 */ }
+})
 </script>
 
 <style scoped>

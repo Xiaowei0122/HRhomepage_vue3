@@ -32,7 +32,7 @@
             <div class="col-6 col-md-4 col-xl-3" v-for="product in filteredProducts" :key="product.id">
               <div class="product-card">
                 <div class="image-wrapper">
-                  <img :src="product.image" :alt="product.name" class="product-img">
+                  <img :src="product.img" :alt="product.name" class="product-img">
                   <div class="hover-mask">
                     <router-link :to="{ name: 'ProductDetail', params: { id: product.id }}" class="btn btn-light btn-sm rounded-pill px-3 shadow-sm">
                         查看详情
@@ -40,7 +40,7 @@
                   </div>
                 </div>
                 <div class="p-3 text-center">
-                  <div class="product-category text-uppercase text-danger">{{ product.categoryName }}</div>
+                  <div class="product-category text-uppercase text-danger">{{ product.category }}</div>
                   <h6 class="product-name text-truncate mb-0">{{ product.name }}</h6>
                 </div>
               </div>
@@ -57,45 +57,53 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { getProducts } from '../api/public'
 
-// 分类数据
-const categories = ref([
-  { id: 'all', name: '全部分类' },
-  { id: 'copier', name: '复印机 / 多功能一体机' },
-  { id: 'printer', name: '激光打印机' },
-  { id: 'projector', name: '投影仪 / 演示设备' },
-  { id: 'scanner', name: '高速扫描仪' },
-  { id: 'consumables', name: '办公耗材 / 纸张' },
-  { id: 'accessories', name: '配件 / 附件' },
-  {id: 'others', name: '其他办公设备' },
-  {id: 'laobao', name: '劳保用品' },
-])
+const currentCategory = ref('全部')
 
-const currentCategory = ref('all')
-
-// 模拟产品数据
+// 后端产品字段：{ id, name, img, category, price, speed, function, stock, techSpecs }
 const products = ref([
-  { id: 1, catId: 'copier', categoryName: '复印机', name: '惠普 Color LaserJet M179fnw', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
-  { id: 2, catId: 'printer', categoryName: '打印机', name: '惠普 LaserJet Pro M404n', image: 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?auto=format&fit=crop&w=400&q=80' },
-  { id: 3, catId: 'copier', categoryName: '复印机', name: '柯尼卡美能达 C250i', image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
-  { id: 4, catId: 'projector', categoryName: '投影仪', name: '爱普生 CB-X06E 商务机', image: 'https://images.unsplash.com/photo-1616628188859-7a11abb6fcc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  // ... 可以继续添加更多产品
+  { id: 1, category: '复印机', name: '惠普 Color LaserJet M179fnw', img: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
+  { id: 2, category: '打印机', name: '惠普 LaserJet Pro M404n', img: 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?auto=format&fit=crop&w=400&q=80' },
+  { id: 3, category: '复印机', name: '柯尼卡美能达 C250i', img: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&w=400&q=80' },
+  { id: 4, category: '投影仪', name: '爱普生 CB-X06E 商务机', img: 'https://images.unsplash.com/photo-1616628188859-7a11abb6fcc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
 ])
+
+// 分类由产品数据动态推导（后端 category 为中文自由文本）
+const categories = computed(() => {
+  const set = new Set(products.value.map((p) => p.category).filter(Boolean))
+  return ['全部', ...set].map((c) => ({ id: c, name: c === '全部' ? '全部分类' : c }))
+})
 
 const activeCategoryName = computed(() => {
-  return categories.value.find(c => c.id === currentCategory.value)?.name || ''
+  return currentCategory.value === '全部' ? '全部产品' : currentCategory.value
 })
 
 const filteredProducts = computed(() => {
-  if (currentCategory.value === 'all') return products.value
-  return products.value.filter(p => p.catId === currentCategory.value)
+  if (currentCategory.value === '全部') return products.value
+  return products.value.filter((p) => p.category === currentCategory.value)
 })
 
 const getProductCount = (catId) => {
-  if (catId === 'all') return products.value.length
-  return products.value.filter(p => p.catId === catId).length
+  if (catId === '全部') return products.value.length
+  return products.value.filter((p) => p.category === catId).length
 }
+
+onMounted(async () => {
+  try {
+    const data = await getProducts({ page: 1, size: 100 })
+    const records = (data && data.records) || []
+    if (records.length) {
+      products.value = records.map((p) => ({
+        id: p.id,
+        name: p.name,
+        img: p.img,
+        category: p.category || '其他',
+      }))
+    }
+  } catch { /* 后端不可用时保留默认产品 */ }
+})
 </script>
 
 <style scoped>

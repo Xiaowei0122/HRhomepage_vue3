@@ -19,7 +19,7 @@
                 <p class="news-summary">{{ n.summary }}</p>
               </div>
               <div class="news-more-link">
-                <router-link to="/news">阅读全文 →</router-link>
+                <router-link :to="n.id ? '/news/' + n.id : '/news'">阅读全文 →</router-link>
               </div>
             </div>
           </div>
@@ -45,7 +45,7 @@
 
             <div class="qr-box-wrapper">
               <div class="qr-code">
-                <img src="https://picsum.photos/96" alt="QR" />
+                <img :src="qrCode" alt="QR" />
               </div>
               <div class="qr-text">
                 <div class="qr-name">公众号：鸿瑞办公服务</div>
@@ -60,10 +60,36 @@
 </template>
 
 <script setup>
-const news = [
+import { ref, onMounted } from 'vue'
+import { getNews, getPublicConfig } from '../api/public'
+
+const news = ref([
   { title: '鸿瑞办公成为某市政府打印设备指定供应商', date: '2025-09-18', tag: '公司新闻', summary: '凭借稳定的供货与高质量的售后服务，公司中标并将为市内多家单位提供设备与维保服务。' },
   { title: '推出“耗材定投”服务，降低企业采购成本', date: '2025-08-02', tag: '产品服务', summary: '为中大型客户提供一体化耗材管理计划，实现库存自动补货与费用可视化。' }
-]
+])
+
+const qrCode = ref('https://picsum.photos/96')
+
+onMounted(async () => {
+  try {
+    const data = await getNews({ page: 1, size: 3 })
+    const records = (data && data.records) || []
+    if (records.length) {
+      news.value = records.slice(0, 3).map((n) => ({
+        id: n.id,
+        title: n.title,
+        date: n.date,
+        tag: n.type,
+        summary: n.summary,
+      }))
+    }
+  } catch { /* 后端不可用时保留默认新闻 */ }
+
+  try {
+    const cfg = await getPublicConfig()
+    if (cfg.qrcode) qrCode.value = cfg.qrcode
+  } catch { /* 忽略 */ }
+})
 </script>
 
 <style scoped>

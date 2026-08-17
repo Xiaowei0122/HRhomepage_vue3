@@ -34,6 +34,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { getNewsDetail } from '../api/public'
 
 const props = defineProps(['id'])
 const article = ref({
@@ -42,18 +43,21 @@ const article = ref({
   content: ''
 })
 
-onMounted(() => {
-  // 实际开发中，这里会根据 props.id 调用 API
-  // 下面是模拟数据
-  setTimeout(() => {
+onMounted(async () => {
+  try {
+    const data = await getNewsDetail(props.id)
     article.value = {
-      title: '鸿瑞办公成功为某市政府打印设备指定供应商',
-      date: '2025-09-18',
-      content: '<p>这里是详细的文章内容...</p><p>鸿瑞办公深耕办公设备领域20年...</p><p>作为一家在办公设备领域深耕二十年的企业，我们始终坚持以客户需求为导向，致力于为各类企业提供高效、智能的办公解决方案。从最初的复印机、打印机到如今的全方位办公硬件设备，我们不断提升产品质量与技术创新，力求为客户提供更加优质的办公体验。</p>'
-                +'<p>二十年的历程不仅是企业发展的见证，也是我们不断积累经验、提升服务的过程。通过与各大品牌的紧密合作，我们的产品涵盖了复印机、打印机、投影仪、扫描仪等多个领域，满足了不同行业客户的多样化需求。此外，我们还为客户提供专业的安装、维修及售后服务，确保设备始终高效运行，助力客户在日常办公中实现更高效、更节省的工作模式。</p>'
-                +'<p>未来，我们将继续秉持“创新驱动，服务至上”的理念，不断突破技术边界，推动办公设备行业的发展，为客户创造更多价值。</p>'
+      title: data.title || '未命名文章',
+      date: data.date || '',
+      content: data.content || '<p>暂无内容</p>',
     }
-  }, 500)
+  } catch (e) {
+    article.value = {
+      title: '文章不存在或已下架',
+      date: '',
+      content: '<p>' + (e.message || '请返回新闻列表') + '</p>',
+    }
+  }
 })
 </script>
 

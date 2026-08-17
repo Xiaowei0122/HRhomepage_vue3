@@ -48,8 +48,9 @@
 </template>
 
 <script setup>
-import { onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { getPublicConfig } from '../api/public'
 
 const route = useRoute()
 
@@ -79,7 +80,7 @@ watch(() => route.hash, () => {
   forceScrollToAnchor()
 })
 
-const serviceList = [
+const serviceList = ref([
   {
     id: 'sales',
     tag: 'HARDWARE SALES',
@@ -112,7 +113,20 @@ const serviceList = [
     desc: '通过OA集成、打印管控及设备运维一体化方案，帮助企业实现成本可视化管理。支持刷卡/人脸识别打印，保障文档安全，助力企业实现降本增效。',
     points: ['成本统计分析', '文档安全闭环', '云打印技术支持', '高效运维系统']
   }
-]
+])
+
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    const list = (cfg.services || []).filter((s) => s && s.id)
+    if (list.length) {
+      serviceList.value = serviceList.value.map((s) => {
+        const hit = list.find((b) => b.id === s.id)
+        return hit ? { ...s, title: hit.title || s.title, desc: hit.desc || s.desc } : s
+      })
+    }
+  } catch { /* 后端不可用时保留默认服务 */ }
+})
 </script>
 
 <style scoped>

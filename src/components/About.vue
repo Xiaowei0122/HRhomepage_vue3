@@ -43,12 +43,23 @@
 </template>
 
 <script setup>
-const stats = [
+import { ref, onMounted } from 'vue'
+import { getPublicConfig } from '../api/public'
+
+const stats = ref([
   { num: '全平台', label: '省市区级、央采、军采入驻' },
   { num: '30+', label: '专业业务团队' },
   { num: '500+', label: '企、事业、单位客户' },
   { num: '24/7', label: '售后响应' }
-]
+])
+
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    const list = (cfg.about && cfg.about.stats) || []
+    if (list.length) stats.value = list
+  } catch { /* 后端不可用时保留默认统计 */ }
+})
 </script>
 
 <style scoped>

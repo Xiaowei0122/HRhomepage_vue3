@@ -41,7 +41,7 @@
           <h4 class="fw-bold mb-3">功能升级中</h4>
           <p class="text-secondary small mb-4">为了提供更优质的线上体验，售后平台正在筹备中。</p>
           <div class="phone-box p-3 bg-light rounded-3 mb-4">
-            <div class="fw-bold text-danger h5 mb-0">029-85550780</div>
+            <div class="fw-bold text-danger h5 mb-0">{{ servicePhone }}</div>
           </div>
           <button class="btn btn-dark w-100 rounded-pill" @click="isModalOpen = false">我知道了</button>
         </div>
@@ -51,13 +51,24 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { getPublicConfig } from '../api/public'
 
-const logoFull = 'assets/partners/logo-full.png'
+const logoFull = ref('assets/partners/logo-full.png')
+const servicePhone = ref('029-85550780')
 const isModalOpen = ref(false)
 const isMenuShow = ref(false)
 const route = useRoute()
+
+onMounted(async () => {
+  try {
+    const cfg = await getPublicConfig()
+    if (cfg.logo) logoFull.value = cfg.logo
+    const phone = cfg.contact && (cfg.contact.businessPhone || cfg.contact.phone)
+    if (phone) servicePhone.value = phone
+  } catch { /* 后端不可用时保留默认值 */ }
+})
 
 const navLinks = [
   { name: '首页', path: '/' },

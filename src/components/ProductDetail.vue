@@ -124,6 +124,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { getProductDetail, getProducts } from '../api/public'
 
 const route = useRoute()
 const product = ref(null)
@@ -136,61 +137,52 @@ const relatedProducts = ref([])
 const lensStyle = reactive({ top: '0', left: '0' })
 const resultStyle = reactive({ backgroundPosition: '0 0', backgroundImage: '' })
 
-// 模拟数据库（保持原始数据不变）
-const allProducts = [
-  { 
-    id: 100152130120, 
-    catId: 'printer', 
-    categoryName: '黑白激光一体机', 
-    name: '惠普 (HP) 116w 无线激光多功能一体机', 
-    image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=600',
-    images: [
-      'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800',
-      'https://images.unsplash.com/photo-1597733336794-12d05021d510?w=800'
-    ],
-    description: '集打印、复印、扫描于一体，支持WiFi无线连接，小巧高效。',
-    highlights: ['20页/分钟高速打印', 'WiFi无线办公', '经典高品质'],
-    specs: {
-      "品牌": "惠普 (HP)",
-      "商品编号": "100152130120",
-      "货号": "A00F8A",
-      "是否信创商品": "否",
-      "认证型号": "116w",
-      "国补备案型号": "116w",
-      "CCC强制性认证": "是",
-      "网络打印": "支持无线网络打印",
-      "打印速度": "20页/分钟 (黑白)",
-      "随机印量": "1000页",
-      "接口/端口": "WiFi端口, USB",
-      "纸张输入容量": "150页",
-      "基础功能": "打印, 复印, 扫描",
-      "双面打印": "非自动双面",
-      "自动双面复印": "不支持",
-      "输稿器": "不支持",
-      "扫描功能": "平板式扫描",
-      "最大支持幅面": "A4",
-      "能效等级": "二级能效"
-    }
-  },
-  { 
-    id: 2, catId: 'printer', categoryName: '一体机', name: '理光 IM C2000', 
-    image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=600',
-    images: ['https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=800'],
-    description: '商用彩色一体机。',
-    highlights: ['智能操作', '色彩还原'],
-    specs: { "速度": "20ppm", "类型": "彩色激光" }
-  }
-]
+const PLACEHOLDER = 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=600'
 
-const loadData = (id) => {
-  const current = allProducts.find(p => String(p.id) === String(id)) || allProducts[0]
-  product.value = current
+// 后端产品字段：{ id, name, price, speed, function, stock, img, techSpecs, category }
+const loadData = async (id) => {
+  if (!id) return
+  let p
+  try {
+    p = await getProductDetail(id)
+  } catch {
+    product.value = null
+    return
+  }
+
+  const images = p.img ? [p.img] : [PLACEHOLDER]
+  const specs = {}
+  if (p.category) specs['产品类别'] = p.category
+  if (p.price != null) specs['参考价格'] = '¥' + p.price
+  if (p.speed) specs['处理速度'] = p.speed
+  if (p.function) specs['主要功能'] = p.function
+  if (p.stock != null) specs['库存'] = String(p.stock)
+
+  product.value = {
+    id: p.id,
+    categoryName: p.category || '办公设备',
+    name: p.name || '未命名产品',
+    images,
+    description: p.function || '正品保障，支持全国联保与上门安装服务。',
+    highlights: (p.techSpecs && p.techSpecs.length) ? p.techSpecs : ['原厂正品', '专业安装调试'],
+    specs,
+  }
   currentImgIndex.value = 0
+  activeTab.value = 0
   productTabs.value = [
-    { label: '详细规格', type: 'table', content: current.specs },
+    { label: '详细规格', type: 'table', content: specs },
     { label: '售后保障', type: 'text', content: '厂家提供全国联保，本站提供24小时技术支持。' }
   ]
-  relatedProducts.value = allProducts.filter(p => p.catId === current.catId && String(p.id) !== String(id))
+
+  relatedProducts.value = []
+  try {
+    const data = await getProducts({ page: 1, size: 100 })
+    const records = (data && data.records) || []
+    relatedProducts.value = records
+      .filter((x) => x.category === p.category && String(x.id) !== String(p.id))
+      .slice(0, 4)
+      .map((x) => ({ id: x.id, image: x.img, categoryName: x.category, name: x.name }))
+  } catch { relatedProducts.value = [] }
 }
 
 watch(() => route.params.id, (newId) => {
